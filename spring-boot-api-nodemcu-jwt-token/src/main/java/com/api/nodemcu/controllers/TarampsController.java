@@ -16,31 +16,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.nodemcu.model.JfaModel;
-import com.api.nodemcu.repository.JfaRepository;
-
+import com.api.nodemcu.model.TarampsModel;
+import com.api.nodemcu.repository.TarampsRepository;
 @RestController
-@RequestMapping("/api/v1/jfa")
-public class JfaController {
+@RequestMapping("/api/v1/taramps")
+public class TarampsController {
 
     @Autowired
-    private JfaRepository jfaRepository;
+    private TarampsRepository tarampsRepository;
 
     @GetMapping
-    public ResponseEntity<List<JfaModel>> listarTodos() {
-        List<JfaModel> jfas = jfaRepository.findAll();
+    public ResponseEntity<List<TarampsModel>> listarTodos() {
+        List<TarampsModel> jfas = tarampsRepository.findAll();
         return ResponseEntity.ok(jfas);
     }
 
     @PostMapping()
-    public ResponseEntity<JfaModel> criarRegistro(@RequestBody JfaModel novoRegistro) {
-        JfaModel registroSalvo = jfaRepository.save(novoRegistro);
+    public ResponseEntity<TarampsModel> criarRegistro(@RequestBody TarampsModel novoRegistro) {
+        TarampsModel registroSalvo = tarampsRepository.save(novoRegistro);
         return ResponseEntity.ok(registroSalvo);
     }
 
     @GetMapping("/por-data")
-    public ResponseEntity<List<JfaModel>> buscarPorData(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date data) {
-        List<JfaModel> jfa = jfaRepository.findByDate(data);
+    public ResponseEntity<List<TarampsModel>> buscarPorData(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date data) {
+        List<TarampsModel> jfa = tarampsRepository.findByDate(data);
         if (jfa != null) {
             return ResponseEntity.ok(jfa);
         } else {
@@ -49,53 +48,52 @@ public class JfaController {
     }
 
     @GetMapping("/por-vendedor")
-    public ResponseEntity<List<JfaModel>> buscarPorVendedor(@RequestParam String vendedor) {
-        List<JfaModel> jfas = jfaRepository.findBySeller(vendedor);
+    public ResponseEntity<List<TarampsModel>> buscarPorVendedor(@RequestParam String vendedor) {
+        List<TarampsModel> jfas = tarampsRepository.findBySeller(vendedor);
         return ResponseEntity.ok(jfas);
     }
 
     @GetMapping("/por-produto")
-    public ResponseEntity<List<JfaModel>> buscarPorProduto(@RequestParam String produto) {
-        List<JfaModel> jfas = jfaRepository.findByProduct(produto);
+    public ResponseEntity<List<TarampsModel>> buscarPorProduto(@RequestParam String produto) {
+        List<TarampsModel> jfas = tarampsRepository.findByProduct(produto);
         return ResponseEntity.ok(jfas);
     }
 
     @GetMapping("/por-intervalo-data")
-    public ResponseEntity<List<JfaModel>> buscarPorIntervaloDeDatas(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
-        List<JfaModel> jfas = jfaRepository.findByDateRange(dataInicio, dataFim);
+    public ResponseEntity<List<TarampsModel>> buscarPorIntervaloDeDatas(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
+        List<TarampsModel> jfas = tarampsRepository.findByDateRange(dataInicio, dataFim);
         return ResponseEntity.ok(jfas);
     }
 
     @GetMapping("/get-by-date-range-grouped-by-model")
     public ResponseEntity<List<Map<String, Object>>> getByDateRangeGroupedByModel(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
-        List<Object[]> jfas = jfaRepository.findByDateRangeGroupedByModel(dataInicio, dataFim);
-
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
+        List<Object[]> jfas = tarampsRepository.findByDateRangeGroupedByModel(dataInicio, dataFim);
         List<Map<String, Object>> resultado = new ArrayList<>();
-
+        
         for (Object[] obj : jfas) {
             String familia = obj[0].toString();
             if (!familia.equals("OUTROS")) {
                 Map<String, Object> item = new HashMap<>();
                 item.put("familia", familia);
-                item.put("quantidade", ((Number) obj[1]).intValue());
-                item.put("valor", ((Number) obj[2]).doubleValue());
+                item.put("quantidade", ((Number)obj[1]).intValue());
+                item.put("valor", ((Number)obj[2]).doubleValue());
                 resultado.add(item);
             }
         }
-
+        
         return ResponseEntity.ok(resultado);
     }
 
     @GetMapping("/market-share")
     public ResponseEntity<List<Map<String, Object>>> marketShare(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
-        List<Object[]> jfas = jfaRepository.findByDateRangeGroupedByModel(dataInicio, dataFim);
-
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
+        List<Object[]> jfas = tarampsRepository.findByDateRangeGroupedByModel(dataInicio, dataFim);
+        
         Map<String, Map<String, Object>> resultado = new HashMap<>();
         resultado.put("FONTES", new HashMap<String, Object>() {{
             put("familia", "FONTE");
@@ -130,58 +128,35 @@ public class JfaController {
             item.put("quantidade", (int) item.get("quantidade") + ((Number) obj[1]).intValue());
             item.put("valor", (double) item.get("valor") + ((Number) obj[2]).doubleValue());
         }
-
         return ResponseEntity.ok(new ArrayList<>(resultado.values()));
     }
 
     @GetMapping("/comparar-quantidades")
     public ResponseEntity<List<Object[]>> compararQuantidades(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date data1,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date data2) {
-        List<Object[]> resultado = jfaRepository.compararQuantidadesPorModelo(data1, data2);
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date data1,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date data2) {
+        List<Object[]> resultado = tarampsRepository.compararQuantidadesPorModelo(data1, data2);
         System.out.println(resultado);
         return ResponseEntity.ok(resultado);
     }
-
+    
     @GetMapping("/quantidades-por-intervalo")
     public ResponseEntity<List<Map<String, Object>>> findQuantitiesByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
-        List<Object[]> resultado = jfaRepository.findQuantitiesByDateRangeFonte(dataInicio, dataFim);
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
+        List<Object[]> resultado = tarampsRepository.findQuantitiesByDateRangeFonte(dataInicio, dataFim);
         List<Map<String, Object>> response = new ArrayList<>();
-
+        
         for (Object[] obj : resultado) {
-            String data = obj[0].toString();
-            int quantidade = ((Number)obj[1]).intValue();
-            if (!data.equals("OUTROS") || !data.equals("CONTROLE")) {
-                Map<String, Object> item = new HashMap<>();
-                item.put("date", data);
-                item.put("quantity", quantidade);
-                response.add(item);
+            String familia = obj[0].toString();
+            if (!familia.equals("OUTROS")) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("date", obj[0].toString());
+            item.put("quantity", ((Number)obj[1]).intValue());
+            response.add(item);
             }
         }
-                
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/quantidades-por-intervalo-controle")
-    public ResponseEntity<List<Map<String, Object>>> findQuantitiesByDateRangeControle(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
-        List<Object[]> resultado = jfaRepository.findQuantitiesByDateRangeControle(dataInicio, dataFim);
-        List<Map<String, Object>> response = new ArrayList<>();
-
-        for (Object[] obj : resultado) {
-            String data = obj[0].toString();
-            int quantidade = ((Number)obj[1]).intValue();
-            if (!data.equals("OUTROS")) {
-                Map<String, Object> item = new HashMap<>();
-                item.put("date", data);
-                item.put("quantity", quantidade);
-                response.add(item);
-            }
-        }
-                
+        
         return ResponseEntity.ok(response);
     }
 

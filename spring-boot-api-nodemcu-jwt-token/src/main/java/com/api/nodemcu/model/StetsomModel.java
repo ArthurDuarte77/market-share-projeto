@@ -1,18 +1,17 @@
 package com.api.nodemcu.model;
 
 import java.math.BigDecimal;
-
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.TimeZone;
 
+
 @Entity
 @Data
-@Table(name = "jfa")
-public class JfaModel {
+@Table(name = "stetsom")
+public class StetsomModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
