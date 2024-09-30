@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meu_app_multiplataforma/market_share_page.dart';
 import 'package:meu_app_multiplataforma/perfil_page.dart';
+import 'package:meu_app_multiplataforma/politica_jfa_page.dart';
+import 'package:meu_app_multiplataforma/politica_telecom_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -53,6 +55,18 @@ class _HomePageState extends State<HomePage> {
               context,
               'Market Share',
               const MarketSharePage(),
+            ),
+            const SizedBox(height: 20),
+            _buildButton(
+              context,
+              'Politica FONTE JFA',
+              const PoliticaJfaPage(),
+            ),
+            const SizedBox(height: 20),
+            _buildButton(
+              context,
+              'Politica TELECOM JFA',
+              const PoliticaTelecomJfaPage(),
             ),
           ],
         ),
