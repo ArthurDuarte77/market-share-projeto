@@ -18,11 +18,11 @@ public class UsinaModel {
     private String seller;
     private String product;
     private String brand;
-    private boolean freeShipping;
+    private boolean free_shipping;
     private int quantity;
     
     @Column(precision = 10, scale = 2)
-    private BigDecimal unitPrice;
+    private BigDecimal unit_price;
     
     @Column(precision = 10, scale = 2)
     private BigDecimal total;
