@@ -1,3 +1,4 @@
+import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -38,27 +39,84 @@ class _PoliticaTelecomJfaPageState extends State<PoliticaTelecomJfaPage> {
         title: const Text('Politica TELECOM JFA'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: politicaJfaData.map((data) => ListTile(
-            leading: Image.network(data['image'], fit: BoxFit.cover, width: 100, height: 100,),
-            title: Text(data['title'], overflow: TextOverflow.ellipsis),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Modelo: ${data['model']}', overflow: TextOverflow.ellipsis),
-                Text('Preço: ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(data['price'])}', overflow: TextOverflow.ellipsis),
-                Text('Preço Previsto: ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(data['predicted_price'])}', overflow: TextOverflow.ellipsis),
-                Text('Tipo: ${data['listing_type'] == 'gold_pro' ? 'Premium' : 'Clássico'}', overflow: TextOverflow.ellipsis),
-                InkWell(
-                  child: Text(data['link'], overflow: TextOverflow.ellipsis),
-                  onTap: () => launch(data['link']),
-                ),
-              ],
+      body:SingleChildScrollView(
+      child: Column(
+        children: politicaJfaData.map((data) {
+          return GestureDetector(
+            onTap: () => launch(data['link']),
+            child: Card(
+              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.network(
+                    data['image'],
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 250,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data['title'],
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 4.0),
+                        Text(
+                          'Modelo: ${data['model']}',
+                          style: TextStyle(fontSize: 18.0),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Preço: ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(data['price'])}',
+                          style: TextStyle(fontSize: 18.0),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Preço Previsto: ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(data['predicted_price'])}',
+                          style: TextStyle(fontSize: 18.0),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Tipo: ${data['listing_type'] == 'gold_pro' ? 'Premium' : 'Clássico'}',
+                          style: TextStyle(fontSize: 18.0),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                data['link'],
+                                style: TextStyle(fontSize: 18.0, color: Colors.blue),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.share),
+                              onPressed: () {
+                                Share.share('''${data['model']} - ${data['seller']} - Preço Anúncio: ${data['price']} - Preço Política: ${data['predicted_price']} (${data['listing_type'] == 'gold_pro' ? 'Premium' : 'Clássico'}) ${data['link']}''');
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )).toList(),
-        ),
+          );
+        }).toList(),
       ),
+    )
     );
   }
 }

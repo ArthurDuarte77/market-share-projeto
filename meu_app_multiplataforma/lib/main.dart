@@ -5,8 +5,6 @@ import 'package:timezone/data/latest.dart' as tz;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationService.init();
-  tz.initializeTimeZones();
   runApp(const MyApp());
 }
 

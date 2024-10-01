@@ -2,9 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:meu_app_multiplataforma/configuracoes_page.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class MarketSharePage extends StatefulWidget {
   const MarketSharePage({super.key});
@@ -83,10 +81,10 @@ class _MarketSharePageState extends State<MarketSharePage> {
             "${dataFim.year}-${dataFim.month.toString().padLeft(2, '0')}-${dataFim.day.toString().padLeft(2, '0')}";
       });
     _fetchMarketShareData();
-    _fetchTotalSells();
-    _fetchTotalSellsStetsom();
-    _fetchTotalSellsTaramps();
-    _fetchTotalSellsUsina();
+    // _fetchTotalSells();
+    // _fetchTotalSellsStetsom();
+    // _fetchTotalSellsTaramps();
+    // _fetchTotalSellsUsina();
   }
 
   Future<void> _fetchMarketShareData() async {
@@ -100,9 +98,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
         setState(() {
           marketShareData = decodedResponse.cast<Map<String, dynamic>>();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
 
       response = await client.get(Uri.parse(
           'https://expertinvest.com.br/api/v1/stetsom/market-share?dataInicio=$dataInicioFormatada&dataFim=$dataFimFormatada'));
@@ -113,9 +109,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
           marketShareDataStetsomTable =
               decodedResponse.cast<Map<String, dynamic>>();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
 
       response = await client.get(Uri.parse(
           'https://expertinvest.com.br/api/v1/taramps/market-share?dataInicio=$dataInicioFormatada&dataFim=$dataFimFormatada'));
@@ -126,9 +120,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
           marketShareDataTarampsTable =
               decodedResponse.cast<Map<String, dynamic>>();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
 
       response = await client.get(Uri.parse(
           'https://expertinvest.com.br/api/v1/usina/market-share?dataInicio=$dataInicioFormatada&dataFim=$dataFimFormatada'));
@@ -139,9 +131,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
           marketShareDataUsinaTable =
               decodedResponse.cast<Map<String, dynamic>>();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
 
       response = await client.get(Uri.parse(
           'https://expertinvest.com.br/api/v1/jfa/get-by-date-range-grouped-by-model?dataInicio=$dataInicioFormatada&dataFim=$dataFimFormatada'));
@@ -151,9 +141,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
         setState(() {
           marketShareDataJfa = decodedResponse.cast<Map<String, dynamic>>();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
 
       response = await client.get(Uri.parse(
           'https://expertinvest.com.br/api/v1/usina/get-by-date-range-grouped-by-model?dataInicio=$dataInicioFormatada&dataFim=$dataFimFormatada'));
@@ -163,9 +151,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
         setState(() {
           marketShareDataUsina = decodedResponse.cast<Map<String, dynamic>>();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
 
       response = await client.get(Uri.parse(
           'https://expertinvest.com.br/api/v1/taramps/get-by-date-range-grouped-by-model?dataInicio=$dataInicioFormatada&dataFim=$dataFimFormatada'));
@@ -175,9 +161,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
         setState(() {
           marketShareDataTarmps = decodedResponse.cast<Map<String, dynamic>>();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
 
       response = await client.get(Uri.parse(
           'https://expertinvest.com.br/api/v1/stetsom/get-by-date-range-grouped-by-model?dataInicio=$dataInicioFormatada&dataFim=$dataFimFormatada'));
@@ -187,11 +171,9 @@ class _MarketSharePageState extends State<MarketSharePage> {
         setState(() {
           marketShareDataStetsom = decodedResponse.cast<Map<String, dynamic>>();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
     } catch (e) {
-      print('Erro na requisição: $e');
+      return;
     } finally {
       client.close();
     }
@@ -212,9 +194,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
                   item['quantity'].toDouble()))
               .toList();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
       response = await client.get(Uri.parse(
           'https://expertinvest.com.br/api/v1/jfa/quantidades-por-intervalo-controle?dataInicio=$dataInicioFormatada&dataFim=$dataFimFormatada'));
       if (response.statusCode == 200) {
@@ -227,9 +207,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
                   item['quantity'].toDouble()))
               .toList();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
     } catch (e) {
       print('Erro na requisição: $e');
     } finally {
@@ -252,9 +230,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
                   item['quantity'].toDouble()))
               .toList();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
       response = await client.get(Uri.parse(
           'https://expertinvest.com.br/api/v1/stetsom/quantidades-por-intervalo-controle?dataInicio=$dataInicioFormatada&dataFim=$dataFimFormatada'));
       if (response.statusCode == 200) {
@@ -267,9 +243,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
                   item['quantity'].toDouble()))
               .toList();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
     } catch (e) {
       print('Erro na requisição: $e');
     } finally {
@@ -292,9 +266,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
                   item['quantity'].toDouble()))
               .toList();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
     } catch (e) {
       print('Erro na requisição: $e');
     } finally {
@@ -333,9 +305,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
                   item['quantity'].toDouble()))
               .toList();
         });
-      } else {
-        print('Falha na requisição: ${response.statusCode}');
-      }
+      } 
     } catch (e) {
       print('Erro na requisição: $e');
     } finally {
@@ -356,7 +326,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ElevatedButton(
@@ -364,7 +334,7 @@ class _MarketSharePageState extends State<MarketSharePage> {
                     child: Text(
                         "Selecionar Data Início: ${DateFormat('dd/MM/yyyy').format(dataInicio)}"),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () => _selectDateFim(context),
                     child: Text(
